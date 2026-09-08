@@ -2,6 +2,7 @@ package com.claimguard.claimguard_backend.controller;
 
 import com.claimguard.claimguard_backend.dto.LoginRequest;
 import com.claimguard.claimguard_backend.dto.RegisterRequest;
+import com.claimguard.claimguard_backend.dto.UserResponse;
 import com.claimguard.claimguard_backend.entity.User;
 import com.claimguard.claimguard_backend.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody RegisterRequest request) {
+    public UserResponse register(@RequestBody RegisterRequest request) {
         User user = new User(
                 request.getName(),
                 request.getEmail(),
@@ -28,14 +29,14 @@ public class AuthController {
                         : request.getRole()
         );
 
-        return userService.register(user);
+        return UserResponse.from(userService.register(user));
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody LoginRequest request) {
-        return userService.login(
+    public UserResponse login(@RequestBody LoginRequest request) {
+        return UserResponse.from(userService.login(
                 request.getEmail(),
                 request.getPassword()
-        );
+        ));
     }
 }

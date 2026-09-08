@@ -10,7 +10,7 @@ import TopNav from "./components/TopNav";
 function App() {
     const [user, setUser] = useState(() => {
         try {
-            return JSON.parse(localStorage.getItem("user"));
+            return JSON.parse(localStorage.getItem("claimguard-user"));
         } catch {
             return null;
         }
@@ -21,7 +21,7 @@ function App() {
     const [refreshKey, setRefreshKey] = useState(0);
 
     function logout() {
-        localStorage.removeItem("user");
+        localStorage.removeItem("claimguard-user");
         setUser(null);
         setView("browse");
     }
@@ -31,7 +31,7 @@ function App() {
             <Register
                 onRegistered={(createdUser) => {
                     if (createdUser) {
-                        localStorage.setItem("user", JSON.stringify(createdUser));
+                        localStorage.setItem("claimguard-user", JSON.stringify(createdUser));
                         setUser(createdUser);
                     } else {
                         setShowRegister(false);
@@ -45,7 +45,10 @@ function App() {
     if (!user) {
         return (
             <Login
-                onLogin={setUser}
+                onLogin={(loggedInUser) => {
+                    localStorage.setItem("claimguard-user", JSON.stringify(loggedInUser));
+                    setUser(loggedInUser);
+                }}
                 onRegister={() => setShowRegister(true)}
             />
         );

@@ -30,8 +30,8 @@ function CustomerDashboard({ user, refreshKey, onFileClaim }) {
     const stats = useMemo(() => {
         const pending = claims.filter((c) => c.status === "PENDING").length;
         const approved = claims.filter((c) => c.status === "APPROVED").length;
-        const review = claims.filter((c) => c.status === "UNDER_REVIEW").length;
-        return { pending, approved, review, total: claims.length };
+        const rejected = claims.filter((c) => c.status === "REJECTED").length;
+        return { pending, approved, rejected, total: claims.length };
     }, [claims]);
 
     const featured = claims[0];
@@ -77,8 +77,8 @@ function CustomerDashboard({ user, refreshKey, onFileClaim }) {
                     <strong>{stats.approved}</strong>
                 </div>
                 <div className="stat cyan">
-                    <span>In review</span>
-                    <strong>{stats.review}</strong>
+                    <span>Rejected</span>
+                    <strong>{stats.rejected}</strong>
                 </div>
             </section>
 

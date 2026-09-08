@@ -8,6 +8,7 @@ import com.claimguard.claimguard_backend.entity.Claim;
 import com.claimguard.claimguard_backend.entity.User;
 import com.claimguard.claimguard_backend.repository.ClaimRepository;
 import com.claimguard.claimguard_backend.repository.UserRepository;
+import com.claimguard.claimguard_backend.exception.ResourceNotFoundException;
 
 @Service
 public class ClaimService {
@@ -29,8 +30,11 @@ public class ClaimService {
             String description,
             Long userId) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (claimType == null || claimType.isBlank()) throw new IllegalArgumentException("Claim type is required");
+        if (!Double.isFinite(amount) || amount <= 0) throw new IllegalArgumentException("Amount must be greater than zero");
+        if (description == null || description.isBlank()) throw new IllegalArgumentException("Description is required");
+        User user = userRepository.findById(userId == null ? -1L : userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Claim claim = new Claim(
                 claimType,
@@ -43,6 +47,7 @@ public class ClaimService {
     }
 
     public List<Claim> getUserClaims(Long userId) {
+        if (!userRepository.existsById(userId)) throw new ResourceNotFoundException("User not found");
         return claimRepository.findByUserId(userId);
     }
 
@@ -52,10 +57,11 @@ public class ClaimService {
 
     public Claim updateStatus(Long claimId, String status) {
 
+        if (status == null || !(status.equalsIgnoreCase("PENDING") || status.equalsIgnoreCase("APPROVED") || status.equalsIgnoreCase("REJECTED"))) throw new IllegalArgumentException("Status must be PENDING, APPROVED, or REJECTED");
         Claim claim = claimRepository.findById(claimId)
-                .orElseThrow(() -> new RuntimeException("Claim not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Claim not found"));
 
-        claim.setStatus(status);
+        claim.setStatus(status.toUpperCase());
 
         return claimRepository.save(claim);
     }
@@ -63,6 +69,6 @@ public class ClaimService {
     public Claim getClaim(Long id) {
 
         return claimRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Claim not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Claim not found"));
     }
 }

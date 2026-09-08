@@ -24,12 +24,21 @@ function SubmitClaim({ user, onSubmitted }) {
     async function handleSubmit(e) {
         e.preventDefault();
         setError("");
+        const amount = Number(form.amount);
+        if (!Number.isFinite(amount) || amount <= 0) {
+            setError("Enter an amount greater than zero.");
+            return;
+        }
+        if (form.description.trim().length < 10) {
+            setError("Please describe the incident in at least 10 characters.");
+            return;
+        }
 
         try {
             setLoading(true);
             await createClaim({
                 ...form,
-                amount: Number(form.amount),
+                amount,
                 userId: user.id
             });
             setForm({ claimType: "HEALTH", amount: "", description: "" });

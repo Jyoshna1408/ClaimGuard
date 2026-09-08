@@ -52,14 +52,13 @@ function OfficerDashboard({ user }) {
                     <p className="hero-tag">Control room</p>
                     <h1>Decide in one beat, {user.name}.</h1>
                     <p>
-                        {pending} claims waiting. Approve, reject, or send to review
-                        without leaving the feed.
+                        {pending} claims waiting. Approve or reject without leaving the feed.
                     </p>
                 </div>
             </section>
 
             <div className="filter-bar">
-                {["ALL", "PENDING", "UNDER_REVIEW", "APPROVED", "REJECTED"].map((item) => (
+                {["ALL", "PENDING", "APPROVED", "REJECTED"].map((item) => (
                     <button
                         key={item}
                         className={filter === item ? "chip active" : "chip"}
@@ -101,13 +100,6 @@ function OfficerDashboard({ user }) {
                                 onClick={() => changeStatus(claim.id, "APPROVED")}
                             >
                                 Approve
-                            </button>
-                            <button
-                                className="act review"
-                                disabled={busyId === claim.id}
-                                onClick={() => changeStatus(claim.id, "UNDER_REVIEW")}
-                            >
-                                Review
                             </button>
                             <button
                                 className="act reject"
