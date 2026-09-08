@@ -1,0 +1,12 @@
+claimguard-frontend/node_modules/
+claimguard-frontend/dist/
+
+claimguard-backend/claimguard-backend/target/
+
+.vscode/
+.idea/
+
+.env
+*.env
+
+*.class
