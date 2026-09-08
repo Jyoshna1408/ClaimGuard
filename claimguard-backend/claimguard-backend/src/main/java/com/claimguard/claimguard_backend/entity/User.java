@@ -6,6 +6,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -23,6 +27,10 @@ public class User {
     private String password;
 
     private String role;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Claim> claims = new ArrayList<>();
 
     public User() {
     }
